@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            background-color: rgba(165, 42, 42, 0.5);
+            padding: 1%;
+            grid-gap: 1%;
+            height: 49vw;
+            width: 49vw;
+        }
+
+        .white {
+            background-color: brown;
+            opacity: 1;
+
+        }
+
+        .black {
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 1;
+
+        }
+
+        body {
+            background-color: white;
+            padding: 0;
+            margin: auto;
+            width: 50%;
+            background-image: url('https://image.freepik.com/free-vector/chessboard-perspective-background-vector_57911-3.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+
+        img {
+            width: 100%;
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Checkmate! </h1>
+    <p>White to move</p>
+    <p><a href="https://www.reddit.com/r/chess/comments/7bwgvz/beautiful_checkmate_example_from_a_book_i_am/"
+            target="_blank">Reddit post</a></p>
+
+    <div class="grid-container">
+        <div class="white"><img src="darkRook.svg"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black" id="show"></div>
+        <div class="white"><img src="darkRook.svg"></div>
+        <div class="black"><img src="darkKing.svg"></div>
+        <div class="black"><img src="darkPawn.svg"></div>
+        <div class="white"><img src="darkPawn.svg"></div>
+        <div class="black" id="show"></div>
+        <div class="white"></div>
+        <div class="black"><img src="darkBishop.svg"></div>
+        <div class="white"><img src="darkPawn.svg"></div>
+        <div class="black"></div>
+        <div class="white"><img src="darkPawn.svg"></div>
+
+        <div class="white"></div>
+        <div class="black"></div>
+        <div class="white"><img src="darkPawn.svg"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black"><img src="darkPawn.svg"></div>
+        <div class="white"><img src="darkKnight.svg"></div>
+        <div class="black" id="show"></div>
+        <div class="black"><img src="darkQueen.svg"></div>
+        <div class="white" id="show"></div>
+        <div class="black"><img src="lightPawn.svg"></div>
+        <div class="white"></div>
+        <div class="black"></div>
+        <div class="white"><img src="lightBishop.svg"></div>
+        <div class="black"></div>
+        <div class="white"><img src="lightQueen.svg"></div>
+
+        <div class="white"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black"><img src="lightPawn.svg"></div>
+        <div class="white"><img src="lightKnight.svg"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black" id="show"></div>
+        <div class="black" id="show"></div>
+        <div class="white"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black"><img src="lightBishop.svg"></div>
+        <div class="white"><img src="lightRook.svg"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+
+        <div class="white"><img src="lightPawn.svg"></div>
+        <div class="black"><img src="lightPawn.svg"></div>
+        <div class="white"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black" id="show"></div>
+        <div class="white"><img src="lightPawn.svg"></div>
+        <div class="black"><img src="lightPawn.svg"></div>
+        <div class="black" id="show"></div>
+        <div class="white"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black"></div>
+        <div class="white"></div>
+        <div class="black"><img src="lightKing.svg"></div>
+        <div class="white"></div>
+    </div>
+
+</body>
+
+</html>
