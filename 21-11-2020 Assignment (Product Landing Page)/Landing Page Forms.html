@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Landing Page</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        .item1 {
+            grid-area: emailLabel;
+        }
+
+        .item2 {
+            grid-area: email;
+        }
+
+        .item3 {
+            grid-area: nameLabel;
+        }
+
+        .item4 {
+            grid-area: name;
+        }
+
+        .item5 {
+            grid-area: itemLabel;
+        }
+
+        .item6 {
+            grid-area: item;
+        }
+
+        .item7 {
+            grid-area: textarea;
+        }
+
+        .item8 {
+            grid-area: submit;
+        }
+
+        body {
+            margin: auto;
+            width: 50%;
+        }
+
+        form {
+            background-color: orange;
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            border: 1px solid;
+            width: min(50vw, 300px);
+            grid-template-areas:
+                'emailLabel email'
+                'nameLabel name'
+                'itemLabel item'
+                'textarea textarea'
+                'submit submit';
+        }
+
+        label {
+            margin: 5px;
+        }
+
+        input {
+            margin: 5px;
+        }
+
+        select {
+            margin: 5px;
+        }
+
+        textarea {
+            resize: none;
+            height: 50px;
+            margin: 5px;
+        }
+
+
+        #email {}
+
+        #submit {
+            width: 100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input:invalid:required {
+            background-color: #ffdddd;
+        }
+        
+
+        @media only screen and (max-width: 430px) {
+            form {
+                display: block;
+            }
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Product Satisfaction Survey</h1>
+    <p>Thank you for buying our products. We would love to hear your thoughts</p>
+    <form>
+        <label class="item1" for="email">Email:</label>
+        <input class="item2" id="email " type="text" name="email" placeholder="John@example.com" required
+            pattern="\w+@\w+.com.?\w*">
+        <label class="item3" for="name">Name:</label>
+        <input class="item4" type="text" name="name" required pattern="\w+">
+
+        <label class="item5" for="item">Item:</label>
+        <select class="item6" name="item">
+            <option value="flip">JBL Flip</option>
+            <option value="charge">JBL Charge</option>
+            <option value="extreme">JBL Extreme</option>
+        </select>
+        <textarea class="item7" name="comment" placeholder="Enter your comment here." required pattern="\w+"></textarea>
+        <input class="item8" id="submit" type="submit" value="Submit">
+    </form>
+</body>
+
+</html>

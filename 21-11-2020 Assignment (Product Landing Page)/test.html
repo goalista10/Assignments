@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Landing Page</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        input:invalid {
+            
+        }
+
+        input:invalid:required {
+            text-decoration:  red underline wavy;
+            background-color: #ffdddd;
+        }
+
+        input:empty{
+            background-color: white;
+        }
+
+        input:valid {
+
+        }
+    </style>
+</head>
+<form>
+    <label for="choose">Would you prefer a banana or a cherry?</label>
+    <input id="choose" name="i_like" placeholder="john@example.com" required pattern="\w+@\w+.com.?\w*">
+    <button>Submit</button>
+  </form>
+
+</html>
