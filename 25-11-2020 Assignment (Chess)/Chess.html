@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            background-color: rgba(165, 42, 42, 0.5);
+            padding: 1%;
+            grid-gap: 1%;
+            height: 49vw;
+            width: 49vw;
+        }
+
+        .white {
+            background-color: brown;
+            opacity: 1;
+
+        }
+
+        .black {
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 1;
+
+        }
+
+        body {
+            background-color: white;
+            padding: 0;
+            margin: auto;
+            width: 50%;
+            background-image: url('https://image.freepik.com/free-vector/chessboard-perspective-background-vector_57911-3.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+
+        img {
+            width: 100%;
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Checkmate! </h1>
+    <p>White to move</p>
+    <p><a href="https://www.reddit.com/r/chess/comments/7bwgvz/beautiful_checkmate_example_from_a_book_i_am/"
+            target="_blank">Reddit post</a></p>
+    <button onclick="initialize()">Initialize/Reset</button>
+    <div class="grid-container">
+        <div class="white" id="A1" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkRook1"
+                src="darkRook.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="A2" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkKnight1"
+                src="darkKnight.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="A3" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkBishop1"
+                src="darkBishop.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="A4" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkQueen"
+                src="darkQueen.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="A5" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkKing"
+                src="darkKing.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="A6" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkBishop2"
+                src="darkBishop.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="A7" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkKnight2"
+                src="darkKnight.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="A8" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkRook2"
+                src="darkRook.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="B1" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkPawn1"
+                src="darkPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="B2" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkPawn2"
+                src="darkPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="B3" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkPawn3"
+                src="darkPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="B4" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkPawn4"
+                src="darkPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="B5" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkPawn5"
+                src="darkPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="B6" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkPawn6"
+                src="darkPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="B7" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkPawn7"
+                src="darkPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="B8" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="darkPawn8"
+                src="darkPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+
+        <div class="white" id="C1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="C2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="C3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="C4" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="C5" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="C6" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="C7" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="C8" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="D1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="D2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="D3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="D4" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="D5" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="D6" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="D7" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="D8" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+        <div class="white" id="E1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="E2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="E3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="E4" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="E5" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="E6" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="E7" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="E8" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="F1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="F2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="F3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="F4" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="F5" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="F6" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="black" id="F7" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="white" id="F8" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+        <div class="white" id="G1" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightPawn1"
+                src="lightPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="G2" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightPawn2"
+                src="lightPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="G3" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightPawn3"
+                src="lightPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="G4" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightPawn4"
+                src="lightPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="G5" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightPawn5"
+                src="lightPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="G6" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightPawn6"
+                src="lightPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="G7" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightPawn7"
+                src="lightPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="G8" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightPawn8"
+                src="lightPawn.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="H1" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightRook1"
+                src="lightRook.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="H2" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightKnight1"
+                src="lightKnight.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="H3" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightBishop1"
+                src="lightBishop.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="H4" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightQueen"
+                src="lightQueen.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="H5" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightKing"
+                src="lightKing.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="H6" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightBishop2"
+                src="lightBishop.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="black" id="H7" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightKnight2"
+                src="lightKnight.svg" draggable="true" ondragstart="drag(event,id)"></div>
+        <div class="white" id="H8" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="lightRook2"
+                src="lightRook.svg" draggable="true" ondragstart="drag(event,id)"></div>
+    </div>
+
+    <script>
+        var draggedPiece = "";
+        var draggedLoc = "";
+        var yAxis = "ABCDEFGH";
+
+        function lightPawnMove(targetID) {
+            if (targetID[1] == draggedLoc[1]) {
+                if (yAxis.search(draggedLoc[0]) - 1 == yAxis.search(targetID[0])) {
+                    return true;
+                }
+            }
+        }
+
+        function RookMove(targetID) {
+            if (targetID[1] == draggedLoc[1] || draggedLoc[0] == targetID[0]) {
+                return true;
+            }
+        }
+
+        function BishopMove(targetID) {
+            console.log()
+            if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0]))) {
+                return true;
+            }
+        }
+
+        function QueenMove(targetID) {
+            console.log()
+            if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) || targetID[1] == draggedLoc[1] || draggedLoc[0] == targetID[0]) {
+                return true;
+            }
+        }
+
+        function KingMove(targetID) {
+            console.log()
+            if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) == 1) {
+                return true;
+            }
+            if ((Math.abs(targetID[1] - draggedLoc[1]) & draggedLoc[0] == targetID[0]) || (Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) & draggedLoc[1] == targetID[1])) {
+                return true;
+            }
+        }
+
+        function darkPawnMove(targetID) {
+            if (targetID[1] == draggedLoc[1]) {
+                if (yAxis.search(draggedLoc[0]) + 1 == yAxis.search(targetID[0])) {
+                    return true;
+                }
+            }
+        }
+
+        function initialize() {
+            location.reload();
+        }
+
+        function check(ev) {
+            if (/lightPawn/.test(draggedPiece) == true) {
+                if (lightPawnMove(ev.target.id) == true) {
+                    return 1;
+                }
+            }
+
+            if (/Rook/.test(draggedPiece) == true) {
+                if (RookMove(ev.target.id) == true) {
+                    return 1;
+                }
+            }
+
+            if (/Bishop/.test(draggedPiece) == true) {
+                if (BishopMove(ev.target.id) == true) {
+                    return 1;
+                }
+            }
+
+            if (/Queen/.test(draggedPiece) == true) {
+                if (QueenMove(ev.target.id) == true) {
+                    return 1;
+                }
+            }
+
+            if (/King/.test(draggedPiece) == true) {
+                if (KingMove(ev.target.id) == true) {
+                    return 1;
+                }
+            }
+
+            if (/darkPawn/.test(draggedPiece) == true) {
+                if (darkPawnMove(ev.target.id) == true) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        function allowDrop(ev) {
+            if (check(ev) === 1) {
+                ev.preventDefault();
+            }
+        }
+
+        function drag(ev, id) {
+            draggedLoc = document.getElementById(id).parentElement.id;
+            draggedPiece = id;
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        }
+    </script>
+</body>
+
+</html>
