@@ -178,25 +178,28 @@
         }
 
         function BishopMove(targetID) {
-            console.log()
             if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0]))) {
                 return true;
             }
         }
 
         function QueenMove(targetID) {
-            console.log()
             if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) || targetID[1] == draggedLoc[1] || draggedLoc[0] == targetID[0]) {
                 return true;
             }
         }
 
         function KingMove(targetID) {
-            console.log()
             if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) == 1) {
                 return true;
             }
             if ((Math.abs(targetID[1] - draggedLoc[1]) & draggedLoc[0] == targetID[0]) || (Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) & draggedLoc[1] == targetID[1])) {
+                return true;
+            }
+        }
+
+        function KnightMove(targetID) {
+            if ((Math.abs(targetID[1] - draggedLoc[1]) == 2 & Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) == 1) || (Math.abs(targetID[1] - draggedLoc[1]) == 1 & Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) == 2)) {
                 return true;
             }
         }
@@ -240,6 +243,13 @@
 
             if (/King/.test(draggedPiece) == true) {
                 if (KingMove(ev.target.id) == true) {
+                    return 1;
+                }
+            }
+
+            if (/Knight/.test(draggedPiece) == true) {
+                console.log("knight");
+                if (KnightMove(ev.target.id) == true) {
                     return 1;
                 }
             }
