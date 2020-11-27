@@ -165,13 +165,14 @@
         var turnCount = 0;
         var checkDraggedPiece = "";
         var checkDraggedLoc = "";
+        var targetPiece = "";
 
         function turn() {
-            console.log(turnCount);
-            if (turnCount % 2 == 0 & /light/.test(draggedPiece) == true) {
+            //ensures turn order
+            if (turnCount % 2 == 0 & /light/.test(draggedPiece) == true & /dark/.test(targetPiece)) {
                 return true;
             }
-            if (turnCount % 2 == 1 & /dark/.test(draggedPiece) == true) {
+            if (turnCount % 2 == 1 & /dark/.test(draggedPiece) == true & /light/.test(targetPiece)) {
                 return true;
             }
             return false;
@@ -332,48 +333,50 @@
         }
 
         function initialize() {
+            //resets the board
             location.reload();
         }
 
         function check(ev) {
+            //ensures proper movement of piece
             if (/lightPawn/.test(draggedPiece) == true) {
-                if (lightPawnMove(ev.target.id) == true) {
+                if (lightPawnMove(ev) == true) {
                     return 1;
                 }
             }
 
             if (/Rook/.test(draggedPiece) == true) {
-                if (RookMove(ev.target.id) == true) {
+                if (RookMove(ev) == true) {
                     return 1;
                 }
             }
 
             if (/Bishop/.test(draggedPiece) == true) {
-                if (BishopMove(ev.target.id) == true) {
+                if (BishopMove(ev) == true) {
                     return 1;
                 }
             }
 
             if (/Queen/.test(draggedPiece) == true) {
-                if (QueenMove(ev.target.id) == true) {
+                if (QueenMove(ev) == true) {
                     return 1;
                 }
             }
 
             if (/King/.test(draggedPiece) == true) {
-                if (KingMove(ev.target.id) == true) {
+                if (KingMove(ev) == true) {
                     return 1;
                 }
             }
 
             if (/Knight/.test(draggedPiece) == true) {
-                if (KnightMove(ev.target.id) == true) {
+                if (KnightMove(ev) == true) {
                     return 1;
                 }
             }
 
             if (/darkPawn/.test(draggedPiece) == true) {
-                if (darkPawnMove(ev.target.id) == true) {
+                if (darkPawnMove(ev) == true) {
                     return 1;
                 }
             }
@@ -381,9 +384,16 @@
         }
 
         function allowDrop(ev) {
-            if (check(ev) === 1) {
-                if (turn() == true) {
-                    ev.preventDefault();
+            if (draggedPiece != ev.target.id) {
+                var temp = ev.target.id;
+                if (/dark/.test(ev.target.id) || /light/.test(ev.target.id)) {
+                    targetPiece = ev.target.id;
+                    temp = document.getElementById(targetPiece).parentElement.id;
+                }   
+                if (check(temp) === 1) {
+                    if (turn() == true) {
+                        ev.preventDefault();
+                    }
                 }
             }
         }
@@ -397,7 +407,14 @@
         function drop(ev) {
             ev.preventDefault();
             var data = ev.dataTransfer.getData("text");
-            ev.target.appendChild(document.getElementById(data));
+            if (/dark/.test(targetPiece) || /light/.test(targetPiece)) {
+                let temp = document.getElementById(targetPiece).parentElement.id;
+                document.getElementById(temp).removeChild(document.getElementById(targetPiece));
+                document.getElementById(temp).appendChild(document.getElementById(data));
+                targetPiece = "";
+            } else {
+                ev.target.appendChild(document.getElementById(data));
+            }
             turnCount++;
         }
     </script>
