@@ -166,21 +166,12 @@
         var checkDraggedPiece = "";
         var checkDraggedLoc = "";
 
-        function turn(){
+        function turn() {
             console.log(turnCount);
-            if(turnCount%2 == 0 & /light/.test(draggedPiece) == true){
-                checkDraggedPiece = draggedPiece;
-                checkDraggedLoc = draggedLoc;
-                turnCount++;
+            if (turnCount % 2 == 0 & /light/.test(draggedPiece) == true) {
                 return true;
             }
-            if(turnCount%2 == 1 & /dark/.test(draggedPiece) == true){
-                turnCount++;
-                checkDraggedPiece = draggedPiece;
-                checkDraggedLoc = draggedLoc;
-                return true;
-            }
-            if(draggedLoc == checkDraggedLoc & draggedPiece == checkDraggedPiece){
+            if (turnCount % 2 == 1 & /dark/.test(draggedPiece) == true) {
                 return true;
             }
             return false;
@@ -391,7 +382,7 @@
 
         function allowDrop(ev) {
             if (check(ev) === 1) {
-                if(turn() == true){
+                if (turn() == true) {
                     ev.preventDefault();
                 }
             }
@@ -407,6 +398,7 @@
             ev.preventDefault();
             var data = ev.dataTransfer.getData("text");
             ev.target.appendChild(document.getElementById(data));
+            turnCount++;
         }
     </script>
 </body>
