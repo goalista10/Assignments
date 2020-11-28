@@ -190,6 +190,9 @@
                 return true;
             }
             if (targetID[1] == draggedLoc[1]) {
+                if (draggedLoc[0]  == "G" & targetID[0] == "E"){
+                    return true;
+                }
                 if (yAxis.search(draggedLoc[0]) - 1 == yAxis.search(targetID[0])) {
                     if (document.getElementById(targetID).hasChildNodes() == true) {
                         return false;
@@ -341,6 +344,9 @@
                 return true;
             }
             if (targetID[1] == draggedLoc[1]) {
+                if (draggedLoc[0]  == "B" & targetID[0] == "D"){
+                    return true;
+                }
                 if (yAxis.search(draggedLoc[0]) + 1 == yAxis.search(targetID[0])) {
                     if (document.getElementById(targetID).hasChildNodes() == true) {
                         return false;
