@@ -169,10 +169,16 @@
 
         function turn() {
             //ensures turn order
-            if (turnCount % 2 == 0 & /light/.test(draggedPiece) == true & /dark/.test(targetPiece)) {
+            if (turnCount % 2 == 0 & /light/.test(draggedPiece) == true) {
+                if (/light/.test(targetPiece)) {
+                    return false;
+                }
                 return true;
             }
-            if (turnCount % 2 == 1 & /dark/.test(draggedPiece) == true & /light/.test(targetPiece)) {
+            if (turnCount % 2 == 1 & /dark/.test(draggedPiece) == true) {
+                if (/dark/.test(targetPiece)) {
+                    return false;
+                }
                 return true;
             }
             return false;
@@ -180,8 +186,14 @@
 
         function lightPawnMove(targetID) {
             //check correct movement
+            if(Math.abs(targetID[1] - draggedLoc[1]) == 1 & yAxis.search(draggedLoc[0]) - 1 == yAxis.search(targetID[0])  & document.getElementById(targetID).hasChildNodes() == true){
+                return true;
+            }
             if (targetID[1] == draggedLoc[1]) {
                 if (yAxis.search(draggedLoc[0]) - 1 == yAxis.search(targetID[0])) {
+                    if (document.getElementById(targetID).hasChildNodes() == true) {
+                        return false;
+                    }
                     return true;
                 }
             }
@@ -325,8 +337,14 @@
         }
 
         function darkPawnMove(targetID) {
+            if(Math.abs(targetID[1] - draggedLoc[1]) == 1 & yAxis.search(draggedLoc[0]) + 1 == yAxis.search(targetID[0])  & document.getElementById(targetID).hasChildNodes() == true){
+                return true;
+            }
             if (targetID[1] == draggedLoc[1]) {
                 if (yAxis.search(draggedLoc[0]) + 1 == yAxis.search(targetID[0])) {
+                    if (document.getElementById(targetID).hasChildNodes() == true) {
+                        return false;
+                    }
                     return true;
                 }
             }
@@ -386,10 +404,11 @@
         function allowDrop(ev) {
             if (draggedPiece != ev.target.id) {
                 var temp = ev.target.id;
+                targetPiece = "";
                 if (/dark/.test(ev.target.id) || /light/.test(ev.target.id)) {
                     targetPiece = ev.target.id;
                     temp = document.getElementById(targetPiece).parentElement.id;
-                }   
+                }
                 if (check(temp) === 1) {
                     if (turn() == true) {
                         ev.preventDefault();
@@ -411,7 +430,6 @@
                 let temp = document.getElementById(targetPiece).parentElement.id;
                 document.getElementById(temp).removeChild(document.getElementById(targetPiece));
                 document.getElementById(temp).appendChild(document.getElementById(data));
-                targetPiece = "";
             } else {
                 ev.target.appendChild(document.getElementById(data));
             }
