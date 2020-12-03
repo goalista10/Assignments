@@ -159,19 +159,29 @@
     </div>
 
     <script>
+        //general variables
         var draggedPiece = "";
         var draggedLoc = "";
         var yAxis = "ABCDEFGH";
         var turnCount = 0;
+        //special variable for if target is not a container but a piece
         var targetPiece = "";
+        //function specific global variables for castling requirements
+        //0 if not moved, 1 if moved
         var darkRook1Castle = 0;
         var darkRook2Castle = 0;
         var darkKingCastle = 0;
         var lightRook1Castle = 0;
         var lightRook2Castle = 0;
         var lightKingCastle = 0;
+        //castle code indicates where the rook moves
         var castleCode = "";
+        //function specific global variables for en passant
+        //0 if have not performed 2 forward steps, 1 if have performed
+        var enPassantdarkPawn = [0,0,0,0,0,0,0,0];
+        var enPassantlightPawn = [0,0,0,0,0,0,0,0];
 
+        //moves the rook in castling
         function castle() {
             if (castleCode == "H4") {
                 document.getElementById(castleCode).appendChild(document.getElementById('lightRook1'));
@@ -192,6 +202,7 @@
             castleCode = "";
         }
 
+        //checks if the rook or king have been moved for castling purposes
         function castling() {
             if (/light/.test(draggedPiece)) {
                 if (/Rook/.test(draggedPiece)) {
@@ -216,8 +227,63 @@
             }
         }
 
+        //check if pawn performed an en passant
+        function enPassant(loc){
+            if (loc[1] == draggedLoc[1] & /Pawn/.test(draggedPiece)) {
+                if (draggedLoc[0] == "B" & loc[0] == "D") {
+                    enPassantdarkPawn[loc[1] - 1] = 1;
+                }
+                if(draggedLoc[0] == "G" & loc[0] == "E"){
+                    enPassantlightPawn[loc[1] - 1] = 1;
+                }
+            }
+        }
+
+        //checks if en passant conditions are met, returns the piece to be removed when conditions meet
+        function enPassantEat(targetID){
+            var temp = "";
+            var temp2 = "";
+            if(draggedLoc[0] == "D"){
+                temp = "D" +(draggedLoc[1]-1).toString();
+                temp2 = "darkPawn"+(draggedLoc[1]-1).toString();
+                if(enPassantdarkPawn[draggedLoc[1]-2] == 1 & document.getElementById(temp2).parentElement.id == temp){
+                    if(targetID[0]=="C" & targetID[1] == draggedLoc[1]-1 & document.getElementById(targetID).hasChildNodes() == false){
+                        return temp2;
+                    }
+                }
+            }
+            if(draggedLoc[0] == "D"){
+                temp = "D" +(parseInt(draggedLoc[1])+1).toString();
+                temp2 = "darkPawn"+(parseInt(draggedLoc[1])+1).toString();
+                if(enPassantdarkPawn[draggedLoc[1]] == 1 & document.getElementById(temp2).parentElement.id == temp){
+                    if(targetID[0]=="C" & targetID[1] == parseInt(draggedLoc[1])+1 & document.getElementById(targetID).hasChildNodes() == false){
+                        return temp2;
+                    }
+                }
+            }
+            if(draggedLoc[0] == "E"){
+                temp = "E" +(draggedLoc[1]-1).toString();
+                temp2 = "lightPawn"+(draggedLoc[1]-1).toString();
+                if(enPassantlightPawn[draggedLoc[1]-2] == 1 & document.getElementById(temp2).parentElement.id == temp){
+                    if(targetID[0]=="F" & targetID[1] == draggedLoc[1]-1 & document.getElementById(targetID).hasChildNodes() == false){
+                        return temp2;
+                    }
+                }
+            }
+            if(draggedLoc[0] == "E"){
+                temp = "E" +(parseInt(draggedLoc[1])+1).toString();
+                temp2 = "lightPawn"+(parseInt(draggedLoc[1])+1).toString();
+                if(enPassantlightPawn[draggedLoc[1]] == 1 & document.getElementById(temp2).parentElement.id == temp){
+                    if(targetID[0]=="F" & targetID[1] == parseInt(draggedLoc[1])+1 & document.getElementById(targetID).hasChildNodes() == false){
+                        return temp2;
+                    }
+                }
+            }
+            return false;
+        }
+
+        //checks and ensures turn order
         function turn() {
-            //ensures turn order
             if (turnCount % 2 == 0 & /light/.test(draggedPiece) == true) {
                 if (/light/.test(targetPiece)) {
                     return false;
@@ -233,17 +299,25 @@
             return false;
         }
 
+        //check correct light pawn movement
         function lightPawnMove(targetID) {
-            //check correct movement
+            //eat
             if (Math.abs(targetID[1] - draggedLoc[1]) == 1 & yAxis.search(draggedLoc[0]) - 1 == yAxis.search(targetID[0]) & document.getElementById(targetID).hasChildNodes() == true) {
                 return true;
             }
+            //en passant eat
+            if(enPassantEat(targetID) != false){    
+                return true;
+            }
             if (targetID[1] == draggedLoc[1]) {
+                //move 2 forward at start
                 if (draggedLoc[0] == "G" & targetID[0] == "E") {
                     return true;
                 }
+                //move 1 forward
                 if (yAxis.search(draggedLoc[0]) - 1 == yAxis.search(targetID[0])) {
                     if (document.getElementById(targetID).hasChildNodes() == true) {
+                        //blocked
                         return false;
                     }
                     return true;
@@ -251,6 +325,7 @@
             }
         }
 
+        //check correct rook movement
         function RookMove(targetID) {
             //check corrent movement
             if (targetID[1] == draggedLoc[1] || draggedLoc[0] == targetID[0]) {
@@ -280,6 +355,7 @@
             }
         }
 
+        //check correct bishop movement
         function BishopMove(targetID) {
             //check correct movement
             if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0]))) {
@@ -314,7 +390,9 @@
             }
         }
 
+        //check correct queen movement
         function QueenMove(targetID) {
+            //check correct movement
             if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) || targetID[1] == draggedLoc[1] || draggedLoc[0] == targetID[0]) {
                 if (Math.abs(targetID[1] - draggedLoc[1]) == Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0]))) {
                     //check if no piece is blocking diagonally
@@ -373,7 +451,9 @@
             }
         }
 
+        //check correct king movement
         function KingMove(targetID) {
+            //check and allow castling movement
             if (/light/.test(draggedPiece) & lightKingCastle == 0 & lightRook1Castle == 0 & targetID == 'H3') {
                 if (document.getElementById("H2").children.length == 0 & document.getElementById("H3").children.length == 0 & document.getElementById("H4").children.length == 0) {
                     castleCode = "H4";
@@ -398,26 +478,37 @@
                     return true;
                 }
             }
+            //check correct movement
             if ((Math.abs(targetID[1] - draggedLoc[1]) == 1 || Math.abs(targetID[1] - draggedLoc[1]) == 0) & (Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) == 1 || Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) == 0)) {
                 return true;
             }
         }
 
+        //check correct knight movement
         function KnightMove(targetID) {
             if ((Math.abs(targetID[1] - draggedLoc[1]) == 2 & Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) == 1) || (Math.abs(targetID[1] - draggedLoc[1]) == 1 & Math.abs(yAxis.search(draggedLoc[0]) - yAxis.search(targetID[0])) == 2)) {
                 return true;
             }
         }
 
+        //check correct darkpawn movement
         function darkPawnMove(targetID) {
+            //eat
             if (Math.abs(targetID[1] - draggedLoc[1]) == 1 & yAxis.search(draggedLoc[0]) + 1 == yAxis.search(targetID[0]) & document.getElementById(targetID).hasChildNodes() == true) {
                 return true;
             }
+            //en passant eat
+            if(enPassantEat(targetID) != false){    
+                return true;
+            }
             if (targetID[1] == draggedLoc[1]) {
+                //move 2 forward at start
                 if (draggedLoc[0] == "B" & targetID[0] == "D") {
                     return true;
                 }
+                //move 1 forward
                 if (yAxis.search(draggedLoc[0]) + 1 == yAxis.search(targetID[0])) {
+                    //blocked
                     if (document.getElementById(targetID).hasChildNodes() == true) {
                         return false;
                     }
@@ -431,6 +522,7 @@
             location.reload();
         }
 
+        //checks if the pieces are moving correctly
         function check(ev) {
             //ensures proper movement of piece
             if (/lightPawn/.test(draggedPiece) == true) {
@@ -478,8 +570,10 @@
         }
 
         function allowDrop(ev) {
+            //makes sure dragged object doesnt point to itself
             if (draggedPiece != ev.target.id) {
                 var temp = ev.target.id;
+                //ensures target is container, not the piece
                 targetPiece = "";
                 if (/dark/.test(ev.target.id) || /light/.test(ev.target.id)) {
                     targetPiece = ev.target.id;
@@ -487,6 +581,7 @@
                 }
                 if (check(temp) === 1) {
                     if (turn() == true) {
+                        //allows drop when movement is correct
                         ev.preventDefault();
                     }
                 }
@@ -494,16 +589,24 @@
         }
 
         function drag(ev, id) {
+            //set global variables
             draggedLoc = document.getElementById(id).parentElement.id;
             draggedPiece = id;
+            //prepares for data transfer
             ev.dataTransfer.setData("text", ev.target.id);
         }
 
         function drop(ev) {
-            //if rook or king, disable castling
+            //if rook or king is dragged, disables castling
             castling();
             ev.preventDefault();
             var data = ev.dataTransfer.getData("text");
+            //if en passant conditions are met and en passant is performed
+            enPassant(ev.target.id);
+            if(enPassantEat(ev.target.id) != false){
+                document.getElementById(document.getElementById(enPassantEat(ev.target.id)).parentElement.id).removeChild(document.getElementById(enPassantEat(ev.target.id)));
+            }
+            //if target is a piece, replaces piece with the dragged piece, else data transfer
             if (/dark/.test(targetPiece) || /light/.test(targetPiece)) {
                 let temp = document.getElementById(targetPiece).parentElement.id;
                 document.getElementById(temp).removeChild(document.getElementById(targetPiece));
@@ -511,7 +614,9 @@
             } else {
                 ev.target.appendChild(document.getElementById(data));
             }
+            //increases turn count and changes turn
             turnCount++;
+            //if castling conditions are met and castling is performed
             castle();
         }
     </script>
