@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            background-color: antiquewhite;
+        }
+
+        button.link {
+            background: none;
+            border: none;
+        }
+
+        button.link:hover {
+            background-color: lightgray
+        }
+
+        * {
+            font-family: Arial;
+        }
+
+        div#createUser {
+            display: none;
+        }
+
+        div#displayUser {
+            display: none;
+        }
+
+        div#withdrawUser {
+            display: none;
+        }
+
+        div#depositUser {
+            display: none;
+        }
+
+        div#sendUser {
+            display: none;
+        }
+
+        div#buyItem {
+            display: none;
+        }
+
+        div#removeItem {
+            display: none;
+        }
+
+        div#updateItem {
+            display: none;
+        }
+    </style>
+</head>
+
+<body onload="onLoad()">
+    <h1>Neko Banks</h1>
+
+    <div id="login">
+        <h3>Login</h3>
+        <form id="loginForm">
+            Email:</br><input type="email" id="emailLogin" required></br>
+            Password:</br><input type="password" id="passwordLogin" required>
+            </br></br><input type="submit" value="Login">
+        </form>
+        </br>
+        <button class="link" onclick="create_user(0)">No Account? Create now.</button>
+    </div>
+
+    <div id="createUser">
+        <button class="link" onclick="create_user(1)">Back</button>
+        <h3>Create Account</h3>
+        <form id="createForm">
+            Name:</br><input type="text" id="nameCreate" required></br>
+            Email:</br><input type="email" id="emailCreate" required></br>
+            Password:</br><input type="password" id="passwordCreate" required></br>
+            Confirm Password:</br><input type="password" id="confirmPassword" required>
+            </br></br><input type="submit" value="Create Account">
+        </form>
+    </div>
+
+    <div id="displayUser">
+        <button class="link" onclick="create_user(2)">Back</button>
+        <h3>Your Account</h3>
+        <p id="userDetails"></p>
+        <button class="link" onclick="withdraw()">Withdraw</button>
+        <button class="link" onclick="deposit()">Deposit</button>
+        <button class="link" onclick="send()">Send Money</button></br>
+        <button class="link" onclick="buy()">Buy Item</button>
+        <button class="link" onclick="remove()">Remove Item</button></br>
+        <button class="link" onclick="update()">Update Item</button>
+    </div>
+
+    <div id="withdrawUser">
+        <button class="link" onclick="create_user(3)">Back</button>
+        <h3>Withdraw</h3>
+        <form id="withdrawForm">
+            Amount:</br><input type="number" id="amountWithdraw" required></br>
+            </br><input type="submit" value="Withdraw">
+        </form>
+    </div>
+
+    <div id="depositUser">
+        <button class="link" onclick="create_user(3)">Back</button>
+        <h3>Deposit</h3>
+        <form id="depositForm">
+            Amount:</br><input type="number" id="amountDeposit" required></br>
+            </br><input type="submit" value="Deposit">
+        </form>
+    </div>
+
+    <div id="sendUser">
+        <button class="link" onclick="create_user(3)">Back</button>
+        <h3>Deposit</h3>
+        <form id="sendForm">
+            Email:</br><input type="email" id="emailSend" required></br>
+            Amount:</br><input type="number" id="amountSend" required></br>
+            </br><input type="submit" value="Send">
+        </form>
+    </div>
+
+    <div id="buyItem">
+        <button class="link" onclick="create_user(3)">Back</button>
+        <h3>Buy Item</h3>
+        <form id="buyForm">
+            Item Name:</br><input type="text" id="itemBuy" required></br>
+            Amount:</br><input type="number" id="itemAmount" required></br>
+            </br><input type="submit" value="Buy">
+        </form>
+    </div>
+
+    <div id="removeItem">
+        <button class="link" onclick="create_user(3)">Back</button>
+        <h3>Remove Item</h3>
+        <form id="removeForm">
+            Item Name:</br><input type="text" id="itemRemove" required></br>
+            </br><input type="submit" value="Remove">
+        </form>
+    </div>
+
+    <div id="updateItem">
+        <button class="link" onclick="create_user(3)">Back</button>
+        <h3>Update Item</h3>
+        <form id="updateForm">
+            Item Name:</br><input type="text" id="itemUpdate" required></br>
+            New Cost:</br><input type="text" id="costUpdate" required></br>
+            </br><input type="submit" value="Update">
+        </form>
+    </div>
+
+</body>
+
+<script>
+    let loginUser = null
+    //LOGIN ON SUBMIT
+    document.getElementById('loginForm').onsubmit = function () {
+        var retrievedObject = JSON.parse(sessionStorage.getItem(document.getElementById('emailLogin').value));
+        if (retrievedObject !== null) {
+            if (retrievedObject.password === document.getElementById('passwordLogin').value) {
+                loginUser = retrievedObject;
+                display_user();
+            } else {
+                alert("Invalid Email and/or Password!")
+            }
+        } else {
+            alert("Invalid Email and/or Password!");
+        }
+        document.getElementById("loginForm").reset()
+        return false;
+    };
+
+    //CREATE USER SUBMIT
+    document.getElementById('createUser').onsubmit = function () {
+        if (document.getElementById('passwordCreate').value !== document.getElementById('confirmPassword').value) {
+            alert("Passwords do not match!");
+        } else {
+            let create = new User(document.getElementById('nameCreate').value, document.getElementById('emailCreate').value, document.getElementById('passwordCreate').value, 0);
+            sessionStorage.setItem(create.email, JSON.stringify(create));
+            alert("User created successfully!");
+            document.getElementById("createUser").style.display = "none";
+            document.getElementById("login").style.display = "block";
+            document.getElementById("createForm").reset()
+        }
+        return false;
+    };
+
+    //SHOW CREATE USER DIV AND HIDE OTHERS
+    function create_user(x) {
+        if (x === 0) {
+            document.getElementById("loginForm").reset()
+            document.getElementById("createUser").style.display = "block";
+            document.getElementById("login").style.display = "none";
+        }
+        else if (x === 1) {
+            document.getElementById("createForm").reset()
+            document.getElementById("createUser").style.display = "none";
+            document.getElementById("login").style.display = "block";
+        }
+        else if (x === 2) {
+            document.getElementById("displayUser").style.display = "none";
+            document.getElementById("login").style.display = "block";
+        }
+        else if (x === 3) {
+            document.getElementById("withdrawUser").style.display = "none";
+            document.getElementById("depositUser").style.display = "none";
+            document.getElementById("sendUser").style.display = "none";
+            document.getElementById("buyItem").style.display = "none";
+            document.getElementById("removeItem").style.display = "none";
+            document.getElementById("updateItem").style.display = "none";
+            display_user()
+        }
+    }
+
+    //WHEN BROWSER LOADS
+    function onLoad() {
+        let testObject = new User("maple", "maple@yahoo.com", "maplepass", 100);
+        let testObject2 = new User("snowball", "snowball@yahoo.com", "snowballpass", 75);
+        let testObject3 = new User("willow", "willow@yahoo.com", "willowpass", 50);
+        sessionStorage.setItem(testObject.email, JSON.stringify(testObject));
+        sessionStorage.setItem(testObject2.email, JSON.stringify(testObject2));
+        sessionStorage.setItem(testObject3.email, JSON.stringify(testObject3));
+
+        //var retrievedObject = JSON.parse(sessionStorage.getItem(testObject.email));
+        //console.log(retrievedObject === null);
+    }
+
+    //DISPLAY USER
+    function display_user() {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("displayUser").style.display = "block";
+        document.getElementById('userDetails').innerHTML = "Name: " + loginUser.name + "</br>Money: " + loginUser.balance + "</br>Items: " + loginUser.items;
+    }
+
+    //WITHDRAW FUNCTION
+    document.getElementById('withdrawForm').onsubmit = function () {
+        let withdraw = document.getElementById('amountWithdraw').value
+        if (loginUser.balance > withdraw) {
+            loginUser.balance -= withdraw;
+            sessionStorage.setItem(loginUser.email, JSON.stringify(loginUser));
+            alert("Withdraw Successful");
+            create_user(3);
+        } else {
+            alert("Not enough money!");
+            document.getElementById("withdrawForm").reset()
+        }
+        return false;
+    };
+
+    //WITHDRAW CONTINUATION
+    function withdraw() {
+        document.getElementById("withdrawForm").reset()
+        document.getElementById("displayUser").style.display = "none";
+        document.getElementById("withdrawUser").style.display = "block";
+    }
+
+    //DEPOSIT FUNCTION
+    document.getElementById('depositForm').onsubmit = function () {
+        let deposit = document.getElementById('amountDeposit').value
+        loginUser.balance += parseInt(deposit);
+        sessionStorage.setItem(loginUser.email, JSON.stringify(loginUser));
+        alert("Deposit Successful");
+        create_user(3);
+        return false;
+    };
+
+    //DEPOSIT CONTINUATION
+    function deposit() {
+        document.getElementById("depositForm").reset()
+        document.getElementById("displayUser").style.display = "none";
+        document.getElementById("depositUser").style.display = "block";
+    }
+
+    //SEND FUNCTION
+    document.getElementById('sendForm').onsubmit = function () {
+        var retrievedObject = JSON.parse(sessionStorage.getItem(document.getElementById('emailSend').value));
+        if (retrievedObject === null) {
+            alert("User does not exist!")
+        } else {
+            if (loginUser.balance > document.getElementById('amountSend').value) {
+                loginUser.balance -= document.getElementById('amountSend').value
+                retrievedObject.balance += parseInt(document.getElementById('amountSend').value)
+                sessionStorage.setItem(loginUser.email, JSON.stringify(loginUser));
+                sessionStorage.setItem(retrievedObject.email, JSON.stringify(retrievedObject));
+                alert("Sent Successfully");
+                create_user(3);
+            } else {
+                alert("Not enough money!");
+            }
+        }
+
+        return false;
+    };
+
+    //SEND CONTINUATION
+    function send() {
+        document.getElementById("sendForm").reset()
+        document.getElementById("displayUser").style.display = "none";
+        document.getElementById("sendUser").style.display = "block";
+    }
+
+    //BUY FUNCTION
+    document.getElementById('buyForm').onsubmit = function () {
+        if (JSON.parse(sessionStorage.getItem(document.getElementById('itemBuy').value)) === null) {
+            let newItem = new ExpenseItem(document.getElementById('itemBuy').value, document.getElementById('itemAmount').value)
+            newItem.owner = loginUser.name
+            sessionStorage.setItem(newItem.name, JSON.stringify(newItem));
+            let newUser = new User("", "", "", 0);
+            Object.assign(newUser, loginUser);
+            newUser.add(newItem);
+            loginUser = newUser
+            sessionStorage.setItem(loginUser.email, JSON.stringify(loginUser));
+            alert("Bought Successfully");
+            create_user(3);
+        } else {
+            alert("Item already exists!")
+        }
+        return false;
+    };
+
+    //BUY CONTINUATION
+    function buy() {
+        document.getElementById("buyForm").reset()
+        document.getElementById("displayUser").style.display = "none";
+        document.getElementById("buyItem").style.display = "block";
+    }
+
+    //REMOVE FUNCTION
+    document.getElementById('removeForm').onsubmit = function () {
+        let retrievedObject = JSON.parse(sessionStorage.getItem(document.getElementById('itemRemove').value));
+        if (retrievedObject !== null) {
+            if (retrievedObject.owner !== null) {
+                let newItem = new ExpenseItem("", 0)
+                let newUser = new User("", "", "", 0);
+                Object.assign(newUser, loginUser);
+                Object.assign(newItem, retrievedObject);
+                newUser.delete(newItem);
+                loginUser = newUser
+                sessionStorage.removeItem(newItem.name);
+                sessionStorage.setItem(loginUser.email, JSON.stringify(loginUser));
+                alert("Remove Successfully");
+                create_user(3);
+            } else {
+                alert("You do not own this item!")
+            }
+        } else {
+            alert("Item does not exist!");
+        }
+
+        return false;
+    };
+
+    //REMOVE CONTINUATION
+    function remove() {
+        document.getElementById("removeForm").reset()
+        document.getElementById("displayUser").style.display = "none";
+        document.getElementById("removeItem").style.display = "block";
+    }
+
+    //update FUNCTION
+    document.getElementById('updateForm').onsubmit = function () {
+        let retrievedObject = JSON.parse(sessionStorage.getItem(document.getElementById('itemUpdate').value));
+        if (retrievedObject !== null) {
+            let newItem = new ExpenseItem("", 0)
+            let newUser = new User("", "", "", 0);
+            Object.assign(newUser, loginUser);
+            Object.assign(newItem, retrievedObject);
+            newUser.delete(newItem);
+            loginUser = newUser
+            sessionStorage.removeItem(newItem.name);
+            sessionStorage.setItem(loginUser.email, JSON.stringify(loginUser));
+
+
+            newItem = new ExpenseItem(retrievedObject.name, document.getElementById('costUpdate').value)
+            newItem.owner = loginUser.name
+            sessionStorage.setItem(newItem.name, JSON.stringify(newItem));
+            newUser = new User("", "", "", 0);
+            Object.assign(newUser, loginUser);
+            newUser.add(newItem);
+            loginUser = newUser
+            sessionStorage.setItem(loginUser.email, JSON.stringify(loginUser));
+
+            alert("Updated Successfully");
+            create_user(3);
+
+        } else {
+            alert("Item does not exist!");
+        }
+        return false;
+    };
+
+    //update CONTINUATION
+    function update() {
+        document.getElementById("updateForm").reset()
+        document.getElementById("displayUser").style.display = "none";
+        document.getElementById("updateItem").style.display = "block";
+    }
+
+    class User {
+        constructor(name, email, password, balance) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
+            this.balance = balance;
+            this.items = new Array(0);
+        }
+        add(itemAdd) {
+            this.items.push(itemAdd.name)
+            this.balance -= itemAdd.cost
+            itemAdd.owner = this.name;
+        }
+        delete(itemDelete) {
+            this.items.forEach((item, index) => {
+                if (item === itemDelete.name) {
+                    this.items.splice(index, 1);
+                    itemDelete.owner = null;
+                    this.balance += parseInt(itemDelete.cost)
+                }
+            })
+        }
+        list() {
+            this.items.forEach((item) => {
+                console.log(item)
+            })
+        }
+    }
+
+    class ExpenseItem {
+        constructor(name, cost) {
+            this.name = name;
+            this.cost = cost;
+            this.owner = null;
+        }
+        update(newCost) {
+            this.name = newCost;
+        }
+    }
+
+
+</script>
+</body>
+
+</html>

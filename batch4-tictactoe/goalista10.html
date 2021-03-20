@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #grid-container {
+            display: none;
+            grid-template-columns: 15vw 15vw 15vw;
+            grid-template-rows: 15vw 15vw 15vw;
+            background-color: #2196F3;
+            padding: 10px;
+            width: min-content;
+        }
+
+        .grid-item {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.8);
+            line-height:15vw;
+            font-size: 30px;
+            text-align: center;
+        }
+
+        #prev {
+            display: none;
+        }
+
+        #next {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>TIC-TAC-TOE</h1>
+    <p id="announce">Who goes first?</p>
+    <input class="start" type="button" value="X" onclick="choose(0)">
+    <input class="start" type="button" value="O" onclick="choose(1)">
+    <div id="grid-container">
+        <div id="1" class="grid-item" onclick="apply(1)">L</div>
+        <div id="2" class="grid-item" onclick="apply(2)">E</div>
+        <div id="3" class="grid-item" onclick="apply(3)">T</div>
+        <div id="4" class="grid-item" onclick="apply(4)">S</div>
+        <div id="5" class="grid-item" onclick="apply(5)">P</div>
+        <div id="6" class="grid-item" onclick="apply(6)">L</div>
+        <div id="7" class="grid-item" onclick="apply(7)">A</div>
+        <div id="8" class="grid-item" onclick="apply(8)">Y</div>
+        <div id="9" class="grid-item" onclick="apply(9)">!</div>
+    </div>
+    <h1 id="win"></h1>
+    <input id="prev" type="button" value="prev" onclick="prev()">
+    <input id="next" type="button" value="next" onclick="next()">
+</br>
+    <input id="reset" type="button" value="reset" onclick="reset()">
+
+
+</body>
+
+<script>
+
+    var board = ["Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y"];
+    var chosen = "Z";
+    var lastTurn = 0;
+    var history = [];
+    var turn = 0;
+    var winner = 0;
+
+    function display(x) {
+        if (turn === 0) {
+            document.getElementById("prev").setAttribute("style", "display:none");
+        } else {
+            document.getElementById("prev").setAttribute("style", "display:inline-block");
+        }
+
+        if (turn === lastTurn + 1) {
+            document.getElementById("next").setAttribute("style", "display:none");
+        } else {
+            document.getElementById("next").setAttribute("style", "display:inline-block");
+        }
+    }
+
+    function reset(){
+        location.reload()
+        return false
+    }
+
+    function prev() {
+        document.getElementById(history[turn - 1] + 1).innerHTML = ""
+        turn -= 1
+        display("prev")
+    }
+
+    function next() {
+        document.getElementById(history[turn] + 1).innerHTML = board[history[turn]]
+        turn += 1
+        display("next")
+    }
+
+    function clearBoard() {
+        for (let x = 1; x < 10; x++) {
+            document.getElementById(x).innerHTML = "";
+        }
+    }
+
+    function choose(x) {
+        if (x === 0) {
+            chosen = "X";
+        } else {
+            chosen = "O"
+        }
+        document.getElementsByClassName("start")[0].setAttribute("style", "display:none");
+        document.getElementsByClassName("start")[1].setAttribute("style", "display:none");
+        document.getElementById("grid-container").setAttribute("style", "display:grid");
+    }
+
+    function changeTurn(x) {
+        history[turn] = x - 1;
+        turn += 1;
+        if (chosen === "X") {
+            chosen = "O";
+        } else {
+            chosen = "X";
+        }
+        document.getElementById("announce").innerHTML = chosen + "'s Turn";
+    }
+
+    function apply(x) {
+        if (winner !== 1) {
+            if (turn === 0) {
+                clearBoard();
+            }
+
+            if (board[x - 1] === "Y") {
+                document.getElementById(x).innerHTML = chosen;
+                board[x - 1] = chosen;
+            }
+
+            if (turn > 3) {
+                checkWinner();
+            }
+
+            if (turn === 8) {
+                tie()
+            }
+
+            changeTurn(x);
+        }
+    }
+
+    function checkWinner() {
+        let x = 0
+        for (x = 0; x < 3; x++) {
+            if (board[x * 3] === board[(x * 3) + 1] && board[(x * 3) + 2] === board[(x * 3) + 1] && board[(x * 3) + 2] !== "Y") {
+                win();
+            }
+            if (board[x] === board[x + 3] && board[x + 6] === board[x + 3] && board[x] !== "Y") {
+                win();
+            }
+        }
+        if (board[0] === board[4] && board[4] === board[8] && board[0] !== "Y") {
+            win();
+        }
+        if (board[2] === board[4] && board[4] === board[6] && board[2] !== "Y") {
+            win();
+        }
+    }
+
+    function tie(){
+        showHistory()
+        winner = 1;
+        lastTurn = turn
+        document.getElementById("win").innerHTML = "TIE"
+        document.getElementById("announce").setAttribute("style", "display:none");
+    }
+
+    function win() {
+        showHistory()
+        winner = 1;
+        lastTurn = turn
+        document.getElementById("win").innerHTML = chosen + " wins!"
+        document.getElementById("announce").setAttribute("style", "display:none");
+        for (let x = 0; x < 9; x++) {
+            if (board[x] === "Y") {
+                board[x] = "Z"
+            }
+        }
+    }
+
+    function showHistory() {
+        document.getElementById("prev").setAttribute("style", "display:inline-block");
+    }
+
+</script>
+</body>
+
+</html>

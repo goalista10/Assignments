@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Neko Banks</h1>
+    <h2>Select what you want to do</h2>
+    <button type="button" onclick="show(1)">Search User</button>
+    <button type="button" onclick="show(2)">Create User</button>
+    <button type="button" onclick="show(3)">Deposit Money</button>
+    <button type="button" onclick="show(4)">Withdraw Money</button>
+    <button type="button" onclick="show(5)">Send Money</button>
+    </br>
+    </br></br>
+    <!--SEARCH USER FORM-->
+    <form id="searchUser">Search User:
+        <input type="text" id="searchTerm" required>
+        <input type="submit" value="Submit">
+    </form>
+    <p id="displayUser"></p>
+    <img id="displayPicture" width="100" height="100" alt="No Picture">
+
+    <!--CREATE USER FORM-->
+    <form id="createUser"><b>Create User:</b> </br>Name:
+        <input type="text" id="newName" required></br>Initial Deposit:
+        <input type="number" id="newMoney" required></br>Picture Link:
+        <input type="text" id="newPicture" required>
+        <input type="submit" value="Submit">
+    </form>
+
+    <!--DEPOSIT MONEY FORM-->
+    <form id="deposit"></br><b>Deposit Money:</b> </br>Name:
+        <input type="text" id="depositName" required></br>Amount:
+        <input type="number" id="depositAmount" required>
+        <input type="submit" value="Submit">
+    </form>
+
+    <!--WITHDRAW MONEY FORM-->
+    <form id="withdraw"></br><b>Withdraw Money:</b> </br>Name:
+        <input type="text" id="withdrawName" required></br>Amount:
+        <input type="number" id="withdrawAmount" required>
+        <input type="submit" value="Submit">
+    </form>
+
+    <!--SEND MONEY FORM-->
+    <form id="send"></br><b>Send Money:</b> </br>Sender:
+        <input type="text" id="sender" required></br>Receiver:
+        <input type="text" id="receiver" required></br>Amount:
+        <input type="number" id="sendAmount" required>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+<script>
+    //hide on load
+    window.onload = function () {
+        hide();
+    };
+
+    //HTML hide all
+    function hide() {
+        document.getElementById('searchUser').style.display = "none";
+        document.getElementById('displayUser').style.display = "none";
+        document.getElementById('displayPicture').style.display = "none";
+        document.getElementById('createUser').style.display = "none";
+        document.getElementById('deposit').style.display = "none";
+        document.getElementById('withdraw').style.display = "none";
+        document.getElementById('send').style.display = "none";
+        document.getElementById("searchUser").reset();
+        document.getElementById("createUser").reset();
+        document.getElementById("deposit").reset();
+        document.getElementById("withdraw").reset();
+        document.getElementById("send").reset();
+    }
+
+    //display certain parts
+    function show(x) {
+        hide();
+        if (x === 1) {
+            document.getElementById('searchUser').style.display = "block";
+            //document.getElementById('displayUser').style.display = "block";
+            //document.getElementById('displayPicture').style.display = "block";
+        } else if (x === 2) {
+            document.getElementById('createUser').style.display = "block";
+        } else if (x === 3) {
+            document.getElementById('deposit').style.display = "block";
+        } else if (x === 4) {
+            document.getElementById('withdraw').style.display = "block";
+        } else if (x === 5) {
+            document.getElementById('send').style.display = "block";
+        }
+
+    }
+
+    //default users
+    var users = [{ name: "Snowball", money: 10, picture: "https://static.wikia.nocookie.net/nekoatsume/images/3/3b/Album_Snowball.png/revision/latest/scale-to-width-down/291?cb=20151104203350" },
+    { name: "Maple", money: 25, picture: "https://static.wikia.nocookie.net/nekoatsume/images/8/89/Screenshot_2020-04-12_at_7.48.38_PM.png/revision/latest/scale-to-width-down/184?cb=20200412234932" },
+    { name: "Willow", money: 15, picture: "https://static.wikia.nocookie.net/nekoatsume/images/c/c1/Album_Willow.png/revision/latest/scale-to-width-down/291?cb=20170721155306" }]
+
+    //used by all forms as amount
+    var depositAmount = 0;
+    //global flag specifically for send money
+    var globalFlag = 0
+    //global flag specifically for send money forms
+    var globalFlag2 = 0
+    //global flag specifically for send money forms
+    var globalFlag3 = 0
+    //global flag to check for existing user
+    var globalFlag4 = 0
+
+    //SEND MONEY get values from forms
+    document.getElementById('send').onsubmit = function () {
+        depositAmount = document.getElementById('sendAmount').value;
+        if (/^[a-z ]+$/i.test(document.getElementById('sender').value) && /^[a-z ]+$/i.test(document.getElementById('receiver').value)) {
+            search_user(document.getElementById('receiver').value, 3);
+            search_user(document.getElementById('sender').value, 2);
+            search_user(document.getElementById('receiver').value, 1);
+            globalFlag3 = 0
+        } else {
+            alert("wrong_arguments");
+        }
+
+        return false;
+    };
+
+    //WITHDRAW get values from forms
+    document.getElementById('withdraw').onsubmit = function () {
+        if (/^[a-z ]+$/i.test(document.getElementById('withdrawName').value)) {
+            depositAmount = document.getElementById('withdrawAmount').value;
+            globalFlag3 = 1
+            search_user(document.getElementById('withdrawName').value, 2);
+        } else {
+            alert("wrong_arguments");
+        }
+        return false;
+    };
+
+    //DEPOSIT get values from forms
+    document.getElementById('deposit').onsubmit = function () {
+        if (/^[a-z ]+$/i.test(document.getElementById('depositName').value)) {
+            depositAmount = document.getElementById('depositAmount').value;
+            search_user(document.getElementById('depositName').value, 1);
+        } else {
+            alert("wrong_arguments");
+        }
+        return false;
+    };
+
+    //SEARCH USER get value from form who to search
+    document.getElementById('searchUser').onsubmit = function () {
+        search_user(document.getElementById('searchTerm').value, 0);
+        if (globalFlag2 === 0) {
+            document.getElementById('displayUser').style.display = "block";
+            document.getElementById('displayPicture').style.display = "block";
+        }
+        return false;
+    };
+
+    //CREATE USER get values to create user
+    document.getElementById('createUser').onsubmit = function () {
+        search_user(document.getElementById('newName').value, 4);
+        if (globalFlag4 === 0) {
+            if (/^[a-z ]+$/i.test(document.getElementById('newName').value)) {
+                create_user(document.getElementById('newName').value, document.getElementById('newMoney').value, document.getElementById('newPicture').value);
+            }
+        } else {
+            alert("user_already_exists");
+        }
+        globalFlag4 = 0;
+        return false;
+    };
+
+    //WITHDRAW update money value
+    function withdraw(user) {
+        if (user.money - parseInt(depositAmount) >= 0 && globalFlag3 === 1) {
+            user.money -= parseInt(depositAmount);
+            alert("Withdraw successfully! New balance: " + user.money);
+            globalFlag = 0
+        } else if (globalFlag3 === 1) {
+            alert("not_enough_money");
+            globalFlag = 1
+        } else {
+
+        }
+    }
+
+    //DEPOSIT update money value
+    function deposit(user) {
+        if (globalFlag === 0 && globalFlag2 === 0) {
+            user.money += parseInt(depositAmount);
+            alert("Deposited successfully! New balance: " + user.money);
+        }
+    }
+
+    //SEARCH USER function
+    function search_user(user, reason) {
+        if (/^[a-z ]+$/i.test(user)) {
+            let flag = 0
+            for (let x = 0; x < users.length; x++) {
+                if (users[x].name === user) {
+                    flag = 1
+                    if (reason === 0) {
+                        display_user(users[x]);
+                    }
+                    if (reason === 1) {
+                        deposit(users[x]);
+                    }
+                    if (reason === 2) {
+                        withdraw(users[x]);
+                    }
+                    if (reason === 3) {
+                        globalFlag3 = 1;
+                    }
+                    if (reason === 4) {
+                        globalFlag4 = 1;
+                    }
+                }
+            }
+            globalFlag2 = 0;
+            if (flag === 0 && reason != 3 && reason != 4) {
+                alert("user_does_not_exist")
+                globalFlag2 = 1;
+            }
+        } else {
+            alert("wrong_arguments");
+        }
+    }
+
+    //DISPLAY USER FUNCTION
+    function display_user(user) {
+        document.getElementById('displayUser').innerHTML = "Name: " + user.name + "</br>Money: " + user.money;
+        document.getElementById('displayPicture').src = user.picture;
+    }
+
+    //create user function
+    function create_user(name, money, picture) {
+        if (/^[a-z ]+$/i.test(name)) {
+            var user = new Object();
+            user.name = name;
+            user.money = parseInt(money);
+            user.picture = picture;
+            users.push(user);
+            alert("New user submitted!");
+        } else {
+            alert("wrong_arguments");
+        }
+    }
+
+</script>
+</body>
+
+</html>
